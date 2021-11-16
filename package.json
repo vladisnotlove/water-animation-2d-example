@@ -4,6 +4,7 @@
   "description": "Example of using library water-animation-2d",
   "main": "index.html",
   "scripts": {
+    "dev": "concurrently --kill-others \"webpack --watch --mode development\" \"http-server ./public\"",
     "build": "webpack",
     "start": "http-server ./public"
   },
@@ -13,6 +14,7 @@
     "water-animation-2d": "^0.1.2"
   },
   "devDependencies": {
+    "concurrently": "^6.3.0",
     "http-server": "^13.0.2",
     "webpack": "^5.58.2",
     "webpack-cli": "^4.9.0"

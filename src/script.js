@@ -1,12 +1,26 @@
 import {WaterAnimation2d} from 'water-animation-2d';
 
+const FORCE_COEFF = 100;
+const MAX_FORCE = 8000;
+
+const getInRange = (value, range) => {
+  if (value < range[0]) return range[0];
+  if (value > range[1]) return range[1];
+  return value;
+}
+
 window.addEventListener("load", () => {
+
+  // get and prepare canvas
   const canvas = document.getElementById("canvas");
   canvas.width = window.innerWidth;
-  const waterAnim = new WaterAnimation2d(canvas);
+  canvas.height = window.innerHeight;
 
+  // create water animation
+  const waterAnim = new WaterAnimation2d(canvas);
   waterAnim.run();
 
+  // add event handlers for simulating of touching water
   canvas.addEventListener("mousemove", (e) => {
     const canvasRect = canvas.getBoundingClientRect();
     const cur = {
@@ -24,13 +38,18 @@ window.addEventListener("load", () => {
           !waterAnim.isUnderSurface(prev.x, prev.y) && waterAnim.isUnderSurface(cur.x, cur.y)
       ) {
         const id = waterAnim.applyForce(cur.x, {
-          x: e.movementX * 100,
-          y: e.movementY * 100
+          x: getInRange(e.movementX * FORCE_COEFF, [-MAX_FORCE, MAX_FORCE]),
+          y: getInRange(e.movementY * FORCE_COEFF, [-MAX_FORCE, MAX_FORCE])
+        });
+
+        console.log({
+          x: getInRange(e.movementX * FORCE_COEFF, [-MAX_FORCE, MAX_FORCE]),
+          y: getInRange(e.movementY * FORCE_COEFF, [-MAX_FORCE, MAX_FORCE])
         });
 
         setTimeout(() => {
           waterAnim.cancelForce(id)
-        }, waterAnim.deltaTime * 1000 * 5)
+        }, waterAnim.deltaTime * 1000 * 3)
       }
     }
   })
